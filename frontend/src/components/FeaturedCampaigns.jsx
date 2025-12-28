@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiRequest } from '../api.js';
 import { useAppStore } from '../lib/store.js';
-import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 
 const formatMoney = (n) => `$${n.toLocaleString()}`;
@@ -26,8 +25,12 @@ const FeaturedCampaigns = () => {
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
+        console.log('Fetching featured campaigns...');
         const res = await apiRequest('GET', 'campaigns');
-        setCampaigns(res.data?.slice(0, 3) || []); // Show only first 3 campaigns
+        console.log('Campaigns response:', res.data);
+        const campaignData = res.data?.slice(0, 3) || [];
+        console.log('Setting campaigns:', campaignData);
+        setCampaigns(campaignData); // Show only first 3 campaigns
       } catch (err) {
         console.error('Failed to fetch campaigns:', err);
         setCampaigns([]);
@@ -108,9 +111,11 @@ const FeaturedCampaigns = () => {
           </div>
         ) : (
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {console.log('Rendering campaigns:', campaigns.length)}
             {campaigns.map((c) => {
               const pct = Math.min(100, Math.round((c.collectedAmount / c.targetAmount) * 100));
               const isLoaded = Boolean(loaded[c._id]);
+              console.log('Rendering campaign:', c.title, 'with button');
             return (
               <article key={c._id} className="group overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 backdrop-blur-sm transition-all duration-300 hover:border-emerald-500/30 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-emerald-500/10">
                 <div className="relative h-48 overflow-hidden sm:h-44">
@@ -171,12 +176,24 @@ const FeaturedCampaigns = () => {
                     </div>
 
                     <div className="mt-auto pt-4">
-                      <Button
-                        className="w-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-sky-600 hover:shadow-emerald-500/40 transition-all duration-200"
-                        onClick={() => handleDonate(c)}
-                      >
-                        Donate Now
-                      </Button>
+                      {console.log('Featured campaigns - User:', user, 'Campaign:', c.title)}
+                      {user ? (
+                        <button
+                          className="w-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-sky-600 hover:shadow-emerald-500/40 transition-all duration-200 rounded-lg px-4 py-3 text-sm"
+                          onClick={() => {
+                            console.log('Featured campaigns - Donate button clicked for campaign:', c.title);
+                            handleDonate(c);
+                          }}
+                        >
+                          Donate Now
+                        </button>
+                      ) : (
+                        <div className="text-center text-sm text-slate-400">
+                          <Link to="/login" className="text-emerald-400 hover:text-emerald-300">
+                            Login to donate
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
