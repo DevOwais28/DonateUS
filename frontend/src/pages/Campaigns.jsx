@@ -104,39 +104,6 @@ export default function Campaigns() {
 
   return (
     <ThemeLayout>
-      <div className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/60 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="text-sm font-semibold text-slate-100">DonateUS</Link>
-            <span className="text-xs text-slate-300">Campaigns</span>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link to="/dashboard">
-              <button className="px-2 py-1.5 sm:px-3 bg-white/5 text-white font-semibold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-xs sm:text-sm">
-                <span className="hidden sm:inline">Dashboard</span>
-                <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              </button>
-            </Link>
-            {user && (
-              <div className="flex items-center gap-2 rounded-full bg-white/5 px-2 sm:px-3 py-1.5 ring-1 ring-white/10 max-w-[100px] sm:max-w-none">
-                {user.picture ? (
-                  <img
-                    src={user.picture}
-                    alt={user.name}
-                    className="h-6 w-6 sm:h-7 sm:w-7 rounded-full object-cover ring-1 ring-white/10 flex-shrink-0"
-                  />
-                ) : (
-                  <span className="h-6 w-6 sm:h-7 sm:w-7 rounded-full bg-gradient-to-br from-emerald-500/20 to-sky-500/10 ring-1 ring-white/10 flex-shrink-0" />
-                )}
-                <span className="text-xs sm:text-sm font-semibold text-slate-200 truncate hidden xs:block">{user.name}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex-1">
@@ -335,7 +302,7 @@ export default function Campaigns() {
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full rounded-xl bg-white/5 px-3 py-2 text-slate-100 ring-1 ring-white/10 outline-none transition focus:ring-2 focus:ring-emerald-400"
+                className="mt-2 h-11 w-full rounded-2xl bg-white/5 px-4 text-sm font-semibold text-slate-100 ring-1 ring-white/10 outline-none focus:ring-2 focus:ring-emerald-400/70"
               >
                 {['Zakat', 'Sadqah', 'Fitra', 'General'].map((t) => (
                   <option key={t} value={t}>
