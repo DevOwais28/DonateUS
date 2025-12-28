@@ -6,6 +6,7 @@ import Modal from '../ui/Modal';
 import Badge from '../ui/Badge';
 import { apiRequest } from '../api.js';
 import ThemeLayout from '../layout/ThemeLayout.jsx';
+import Navbar from '../components/Navbar.jsx';
 import { useAppStore } from '../lib/store.js';
 
 function formatMoney(n) {
@@ -104,6 +105,7 @@ export default function Campaigns() {
 
   return (
     <ThemeLayout>
+      <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex-1">

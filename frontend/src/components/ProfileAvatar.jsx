@@ -1,14 +1,19 @@
 import React from 'react';
 
-const ProfileAvatar = ({ name, picture, size = 'md', className = '' }) => {
+const ProfileAvatar = ({ user, name, picture, size = 'md', className = '' }) => {
+  // Extract name and picture from user object if provided
+  const userName = user?.name || name || 'User';
+  const userPicture = user?.picture || picture;
+  
   // Debug: Log props
-  console.log('ProfileAvatar - name:', name);
-  console.log('ProfileAvatar - picture:', picture);
+  console.log('ProfileAvatar - user:', user);
+  console.log('ProfileAvatar - userName:', userName);
+  console.log('ProfileAvatar - userPicture:', userPicture);
   console.log('ProfileAvatar - size:', size);
 
   // Get initials from name (max 2 letters)
   const getInitials = (name) => {
-    if (!name) return 'U';
+    if (!name || name === 'User') return 'U';
     
     const parts = name.trim().split(' ');
     if (parts.length >= 2) {
@@ -31,17 +36,19 @@ const ProfileAvatar = ({ name, picture, size = 'md', className = '' }) => {
   const avatarSize = sizes[size] || sizes.md;
 
   // If there's a picture, show it, otherwise show initials
-  if (picture) {
+  if (userPicture) {
     return (
       <div className={`relative inline-flex items-center justify-center rounded-full overflow-hidden ${avatarSize} ${className}`}>
         <img 
-          src={picture} 
-          alt={name} 
+          src={userPicture} 
+          alt={userName} 
           className="h-full w-full object-cover"
           onError={(e) => {
+            console.log('Image failed to load, showing initials');
             e.target.style.display = 'none';
-            e.target.parentElement.classList.add('bg-gradient-to-br', 'from-emerald-500', 'to-sky-500');
-            e.target.parentElement.innerHTML = `<span class="text-white font-semibold">${getInitials(name)}</span>`;
+            const parent = e.target.parentElement;
+            parent.classList.add('bg-gradient-to-br', 'from-emerald-500', 'to-sky-500');
+            parent.innerHTML = `<span class="text-white font-semibold">${getInitials(userName)}</span>`;
           }}
         />
       </div>
@@ -64,8 +71,9 @@ const ProfileAvatar = ({ name, picture, size = 'md', className = '' }) => {
     ];
     
     let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    const safeName = name || 'User';
+    for (let i = 0; i < safeName.length; i++) {
+      hash = safeName.charCodeAt(i) + ((hash << 5) - hash);
     }
     
     const index = Math.abs(hash) % colors.length;
@@ -73,9 +81,9 @@ const ProfileAvatar = ({ name, picture, size = 'md', className = '' }) => {
   };
 
   return (
-    <div className={`relative inline-flex items-center justify-center rounded-full bg-gradient-to-br ${getColorClasses(name)} ${avatarSize} ${className}`}>
+    <div className={`relative inline-flex items-center justify-center rounded-full bg-gradient-to-br ${getColorClasses(userName)} ${avatarSize} ${className}`}>
       <span className="text-white font-semibold">
-        {getInitials(name)}
+        {getInitials(userName)}
       </span>
     </div>
   );
