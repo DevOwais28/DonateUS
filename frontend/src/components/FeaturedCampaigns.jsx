@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiRequest } from '../api.js';
 import { useAppStore } from '../lib/store.js';
-import Button from '../ui/Button.js';
-import Modal from '../ui/Modal.js';
+import Button from '../ui/Button';
+import Modal from '../ui/Modal';
 
 const formatMoney = (n) => `$${n.toLocaleString()}`;
 
