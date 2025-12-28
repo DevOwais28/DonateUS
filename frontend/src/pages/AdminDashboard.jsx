@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AppShell from '../layout/AppShell';
 import Card from '../ui/Card';
+import Button from '../ui/Button';
 import { apiRequest } from '../api.js';
 
 const calculateDonationTrends = (donations) => {

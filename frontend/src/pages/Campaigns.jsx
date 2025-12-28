@@ -19,6 +19,7 @@ function formatMoney(n) {
 export default function Campaigns() {
   const navigate = useNavigate();
   const user = useAppStore((state) => state.user);
+  const role = useAppStore((state) => state.role);
   const [open, setOpen] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -32,6 +33,18 @@ export default function Campaigns() {
     amount: '',
     campaign: ''
   });
+
+  const updateCampaignStatus = async (campaignId, newStatus) => {
+    try {
+      await apiRequest('PUT', `campaigns/${campaignId}`, { status: newStatus });
+      // Refresh campaigns
+      const campaignsRes = await apiRequest('GET', 'campaigns');
+      setCampaigns(campaignsRes.data || []);
+    } catch (err) {
+      console.error('Failed to update campaign status:', err);
+      alert('Failed to update campaign status');
+    }
+  };
 
   const validateDonation = () => {
     const newErrors = {
@@ -207,7 +220,22 @@ export default function Campaigns() {
                     </div>
 
                     <div className="mt-4 sm:mt-6 border-t border-white/10 pt-4">
-                      {user ? (
+                      {role === 'admin' ? (
+                        <div>
+                          <label className="block text-xs font-medium text-slate-300 mb-2">Campaign Status</label>
+                          <select
+                            value={c.status}
+                            onChange={(e) => updateCampaignStatus(c._id, e.target.value)}
+                            className="mt-2 h-11 w-full rounded-2xl bg-white/5 px-4 text-sm font-semibold text-slate-100 ring-1 ring-white/10 outline-none focus:ring-2 focus:ring-emerald-400/70"
+                          >
+                            <option value="Active">Active</option>
+                            <option value="Suspended">Suspended</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Closed">Closed</option>
+                          </select>
+                        </div>
+                      ) : user ? (
                         <button
                           className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/40 rounded-lg px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm"
                           onClick={() => {

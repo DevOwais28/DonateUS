@@ -96,7 +96,7 @@ export default function AdminDonations() {
                   <select 
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-sm font-medium text-white hover:bg-white/20 transition-colors min-w-[120px]"
+                    className="mt-2 h-11 w-full rounded-2xl bg-white/5 px-4 text-sm font-semibold text-slate-100 ring-1 ring-white/10 outline-none focus:ring-2 focus:ring-emerald-400/70"
                   >
                     <option value="all">All Status</option>
                     <option value="pending">Pending</option>
@@ -192,7 +192,7 @@ export default function AdminDonations() {
                             <select
                               value={r.status}
                               onChange={(e) => updateStatus(r._id, e.target.value)}
-                              className="h-8 rounded-lg bg-white/5 border border-white/10 px-3 text-xs font-semibold text-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all w-full"
+                              className="mt-2 h-11 w-full rounded-2xl bg-white/5 px-4 text-sm font-semibold text-slate-100 ring-1 ring-white/10 outline-none focus:ring-2 focus:ring-emerald-400/70"
                             >
                               <option value="Pending">Pending</option>
                               <option value="Verified">Verified</option>
@@ -251,7 +251,7 @@ export default function AdminDonations() {
                           <select
                             value={r.status}
                             onChange={(e) => updateStatus(r._id, e.target.value)}
-                            className="w-full h-10 rounded-lg bg-white/5 border border-white/10 px-3 text-sm font-semibold text-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                            className="mt-2 h-11 w-full rounded-2xl bg-white/5 px-4 text-sm font-semibold text-slate-100 ring-1 ring-white/10 outline-none focus:ring-2 focus:ring-emerald-400/70"
                           >
                             <option value="Pending">Pending</option>
                             <option value="Verified">Verified</option>

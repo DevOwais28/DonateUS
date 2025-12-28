@@ -69,8 +69,7 @@ export default function Sidebar({ variant = 'user', onNavigate }) {
       <div className="mt-6 rounded-xl bg-gradient-to-br from-emerald-500/5 to-sky-500/5 p-4 ring-1 ring-emerald-500/20">
         <div className="flex items-center gap-3 mb-3">
           <ProfileAvatar 
-            name={user?.name} 
-            picture={user?.picture} 
+            user={user} 
             size="sm" 
             className="ring-1 ring-white/10"
           />
