@@ -1,14 +1,5 @@
 import dotenv from "dotenv";
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const envPath = join(__dirname, '.env');
-console.log('Loading .env from:', envPath);
-dotenv.config({ path: envPath });
-console.log('After load - GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
-console.log('After load - JWT_SECRET:', process.env.JWT_SECRET);
+dotenv.config();
 
 import express from "express";
 import helmet from "helmet";
@@ -21,26 +12,24 @@ import receiptRoutes from "./routes/receipt.js";
 import userRoutes from "./routes/user.js";
 import googleAuthRoutes from "./routes/googleAuth.js";
 import authenticate from "./middlewares/authentication.js";
-import { v2 as cloudinary } from 'cloudinary'
+import { v2 as cloudinary } from "cloudinary";
 
-// Configure Cloudinary
+export const envMode = process.env.NODE_ENV || "DEVELOPMENT";
+const port = process.env.PORT || 3000;
+
+// DB
+connectDB(process.env.MONGO_URI);
+
+// Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-export const envMode = process.env.NODE_ENV?.trim() || 'DEVELOPMENT';
-const port = process.env.PORT || 3000;
-
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017';
-
-connectDB(mongoURI);
 
 const app = express();
 
-
-
-
+// Security
 app.use(
   helmet({
     contentSecurityPolicy: envMode !== "DEVELOPMENT",
@@ -48,29 +37,34 @@ app.use(
   })
 );
 
+// CORS
+const allowedOrigins =
+  envMode === "DEVELOPMENT"
+    ? ["http://localhost:5173", "http://localhost:3000"]
+    : ["https://donate-us.vercel.app"];
+
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: 'https://donate-us.vercel.app', credentials: true }));
 
-// Initialize passport after dotenv loads
+// Passport
 const { default: passport } = await import("./config/passport.js");
 app.use(passport.initialize());
 
+// Routes
+app.get("/", (req, res) => res.send("Hello World"));
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+app.use("/api/donations", donationRoutes);
+app.use("/api/campaigns", campaignRoutes);
+app.use("/api/campaigns/admin", authenticate, campaignRoutes);
+app.use("/api/receipts", authenticate, receiptRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/auth", googleAuthRoutes);
 
-app.use('/api/donations', donationRoutes);
-app.use('/api/campaigns', campaignRoutes); // Public campaigns route (GET only)
-app.use('/api/campaigns/admin', authenticate, campaignRoutes); // Admin campaigns route
-app.use('/api/receipts', authenticate , receiptRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/auth', googleAuthRoutes);
-
-// your routes here
-
-
+// Errors
 app.use(errorMiddleware);
 
-app.listen(port, () => console.log('Server is working on Port:' + port + ' in ' + envMode + ' Mode.'));
+app.listen(port, () =>
+  console.log(`Server running on port ${port} in ${envMode}`)
+);
