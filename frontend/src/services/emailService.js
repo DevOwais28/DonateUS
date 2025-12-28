@@ -21,12 +21,12 @@ export const sendVerificationEmail = async (userEmail, verificationToken) => {
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        name: 'DonationZakat System',
+        name: 'DonateUS',
         email: 'ra920453@gmail.com', // Your email as sender
-        subject: 'Verify Your Email - DonationZakat System',
+        subject: 'Verify Your Email - DonateUS',
         message: `
           <h2>Email Verification</h2>
-          <p>Thank you for signing up for DonationZakat System!</p>
+          <p>Thank you for signing up for DonateUS!</p>
           <p>Please click the link below to verify your email address:</p>
           <p><a href="${verificationUrl}" style="background-color: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a></p>
           <p>Or copy and paste this link in your browser:</p>
@@ -34,7 +34,7 @@ export const sendVerificationEmail = async (userEmail, verificationToken) => {
           <p>This link will expire in 24 hours.</p>
           <p>If you didn't create an account, please ignore this email.</p>
           <br>
-          <p>Best regards,<br>DonationZakat System Team</p>
+          <p>Best regards,<br>DonateUS Team</p>
         `
       })
     });
@@ -67,21 +67,25 @@ export const sendPasswordResetEmail = async (userEmail, resetToken) => {
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        name: 'DonationZakat System',
+        name: 'DonateUS',
         email: 'ra920453@gmail.com', // Your email as sender
-        subject: 'Reset Your Password - DonationZakat System',
-        message: `
-          <h2>Password Reset</h2>
-          <p>You requested to reset your password for your DonationZakat System account.</p>
-          <p>Please click the link below to reset your password:</p>
-          <p><a href="${resetUrl}" style="background-color: #ef4444; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
-          <p>Or copy and paste this link in your browser:</p>
-          <p>${resetUrl}</p>
-          <p>This link will expire in 1 hour.</p>
-          <p>If you didn't request a password reset, please ignore this email.</p>
-          <br>
-          <p>Best regards,<br>DonationZakat System Team</p>
-        `
+        subject: 'Reset Your Password - DonateUS',
+        message: `Password Reset
+
+You requested to reset your password for your DonateUS account.
+
+Please click the link below to reset your password:
+${resetUrl}
+
+Or copy and paste this link in your browser:
+${resetUrl}
+
+This link will expire in 1 hour.
+
+If you didn't request a password reset, please ignore this email.
+
+Best regards,
+DonateUS Team`
       })
     });
     
