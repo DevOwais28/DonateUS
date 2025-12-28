@@ -50,7 +50,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: '*', credentials: true }));
+app.use(cors({ origin: 'https://donate-us.vercel.app', credentials: true }));
 
 // Initialize passport after dotenv loads
 const { default: passport } = await import("./config/passport.js");
