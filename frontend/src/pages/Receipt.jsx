@@ -299,18 +299,18 @@ export default function Receipt() {
     <ThemeLayout className="px-4 py-10">
       <style>{printStyles}</style>
       <div className="mx-auto max-w-2xl">
-        <div id="receipt-print" className="bg-white p-8 rounded-lg shadow-lg">
+        <div id="receipt-print" className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-lg">
           {/* Header */}
-          <div className="mb-6 border-b pb-4">
-            <div className="flex justify-between items-start">
+          <div className="mb-4 sm:mb-6 border-b pb-3 sm:pb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-black">Donation Receipt</h1>
-                <p className="text-black">Thank you for your generous contribution</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-black">Donation Receipt</h1>
+                <p className="text-sm sm:text-base text-black">Thank you for your generous contribution</p>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-black">Receipt #: {donation?._id}</p>
-                <p className="text-sm text-black">Date: {new Date(donation?.createdAt).toLocaleDateString()}</p>
-                <span className={`mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              <div className="text-left sm:text-right">
+                <p className="text-xs sm:text-sm text-black break-all">Receipt #: {donation?._id}</p>
+                <p className="text-xs sm:text-sm text-black">Date: {new Date(donation?.createdAt).toLocaleDateString()}</p>
+                <span className={`mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                   isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                 }`}>
                   {isVerified ? 'Verified' : 'Pending'}
@@ -320,51 +320,51 @@ export default function Receipt() {
           </div>
 
           {/* Donation Details */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold text-black mb-4">Donation Details</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-lg font-semibold text-black mb-3 sm:mb-4">Donation Details</h2>
+            <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-6">
               <div>
                 <h3 className="font-medium text-black mb-2">Campaign Information</h3>
-                <div className="space-y-2">
-                  <p className="text-black"><span className="font-medium">Campaign:</span> {donation?.campaignTitle}</p>
-                  <p className="text-black"><span className="font-medium">Donation Type:</span> {donation?.donationType}</p>
-                  <p className="text-black"><span className="font-medium">Category:</span> {donation?.category}</p>
+                <div className="space-y-1 sm:space-y-2">
+                  <p className="text-sm sm:text-base text-black break-words"><span className="font-medium">Campaign:</span> {donation?.campaignTitle}</p>
+                  <p className="text-sm sm:text-base text-black"><span className="font-medium">Donation Type:</span> {donation?.donationType}</p>
+                  <p className="text-sm sm:text-base text-black"><span className="font-medium">Category:</span> {donation?.category}</p>
                 </div>
               </div>
               
               <div>
                 <h3 className="font-medium text-black mb-2">Payment Information</h3>
-                <div className="space-y-2">
-                  <p className="text-black"><span className="font-medium">Amount:</span> ${donation?.amount?.toFixed(2)}</p>
-                  <p className="text-black"><span className="font-medium">Payment Method:</span> {donation?.paymentMethod}</p>
-                  <p className="text-black"><span className="font-medium">Transaction Date:</span> {new Date(donation?.createdAt).toLocaleString()}</p>
+                <div className="space-y-1 sm:space-y-2">
+                  <p className="text-sm sm:text-base text-black"><span className="font-medium">Amount:</span> <span className="text-lg sm:text-xl font-bold">${donation?.amount?.toFixed(2)}</span></p>
+                  <p className="text-sm sm:text-base text-black"><span className="font-medium">Payment Method:</span> {donation?.paymentMethod}</p>
+                  <p className="text-sm sm:text-base text-black break-words"><span className="font-medium">Transaction Date:</span> {new Date(donation?.createdAt).toLocaleString()}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Donor Information */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <h3 className="font-medium text-black mb-2">Donor Information</h3>
-            <div className="bg-gray-50 p-4 rounded">
-              <p className="font-medium text-black">{donation?.donorName}</p>
-              <p className="text-black">{donation?.donorEmail}</p>
+            <div className="bg-gray-50 p-3 sm:p-4 rounded">
+              <p className="font-medium text-black text-sm sm:text-base break-words">{donation?.donorName}</p>
+              <p className="text-sm sm:text-base text-black break-words">{donation?.donorEmail}</p>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="border-t pt-6 mt-8">
-            <div className="flex flex-col sm:flex-row justify-between items-center">
-              <div className="text-sm text-black mb-4 sm:mb-0">
-                <p>Thank you for your generous support!</p>
-                <p>This receipt confirms your donation to our organization.</p>
-              </div>
+          <div className="border-t pt-4 sm:pt-6 mt-6 sm:mt-8">
+            <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4">
               <button
                 onClick={() => window.print()}
-                className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 no-print"
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 no-print text-sm sm:text-base"
               >
                 Print Receipt
               </button>
+              <div className="text-xs sm:text-sm text-black text-center sm:text-left">
+                <p>Thank you for your generous support!</p>
+                <p>This receipt confirms your donation to our organization.</p>
+              </div>
             </div>
           </div>
         </div>
