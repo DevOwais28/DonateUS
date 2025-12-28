@@ -180,10 +180,11 @@ export default function CreateCampaign() {
                     onChange={(e) => setStatus(e.target.value)}
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
                   >
-                    <option value="Active">Active - Ready for donations</option>
-                    <option value="Pending">Pending - Not yet active</option>
-                    <option value="Paused">Paused - Temporarily suspended</option>
-                    <option value="Completed">Completed - Finished</option>
+                    <option value="Active">Active</option>
+                    <option value="Suspended">Suspended</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Closed">Closed</option>
                   </select>
                 </label>
               </div>
