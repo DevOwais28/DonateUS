@@ -1,0 +1,59 @@
+/* Print styles for receipts */
+@media print {
+  /* Hide everything except the printable receipt */
+  body * {
+    visibility: hidden;
+  }
+  
+  #receipt-print, #receipt-print * {
+    visibility: visible;
+  }
+  
+  #receipt-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    background: white !important;
+    color: #1e293b !important;
+  }
+  
+  #receipt-print * {
+    visibility: visible;
+    background: transparent !important;
+    color: inherit !important;
+    border-color: #e2e8f0 !important;
+  }
+  
+  /* Hide buttons and interactive elements */
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+  
+  /* Ensure proper page layout */
+  @page {
+    size: auto;
+    margin: 0.5in;
+  }
+  
+  /* Remove dark theme styling for print */
+  #receipt-print {
+    background: white !important;
+    color: #1e293b !important;
+  }
+  
+  #receipt-print * {
+    background: transparent !important;
+    color: inherit !important;
+    border-color: #e2e8f0 !important;
+  }
+  
+  /* Ensure the receipt fits on one page */
+  #receipt-print {
+    page-break-inside: avoid;
+    page-break-after: always;
+  }
+}
