@@ -12,7 +12,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
      callbackURL:
   process.env.NODE_ENV === "production"
-    ? "https://donate-us.vercel.app/api/auth/google/callback"
+    ? "https://donateus-production.up.railway.app/api/auth/google/callback"
     : "http://localhost:4000/api/auth/google/callback"
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -73,3 +73,4 @@ passport.use(
 
 
 export default passport;
+
