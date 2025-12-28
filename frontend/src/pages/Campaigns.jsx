@@ -233,7 +233,7 @@ export default function Campaigns() {
                       </div>
                     </div>
 
-                    {user?.role !== 'admin' && (
+                    {user && (
                       <div className="mt-6">
                         <Button
                           className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/40"
