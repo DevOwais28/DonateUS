@@ -21,7 +21,7 @@ const campaignSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Active", "Pending", "Completed", "Paused"],
+      enum: ["Active", "Pending", "Completed", "Suspended", "Closed"],
       default: "Active",
     },
     imageUrl: String,
