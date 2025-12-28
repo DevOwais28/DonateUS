@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiRequest } from '../api.js';
+import { useAppStore } from '../lib/store.js';
+import Button from './Button.js';
+import Modal from './Modal.js';
 
 const formatMoney = (n) => `$${n.toLocaleString()}`;
 
@@ -8,6 +11,17 @@ const FeaturedCampaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState({});
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [amount, setAmount] = useState(50);
+  const [type, setType] = useState('Zakat');
+  const [category, setCategory] = useState('General Relief');
+  const [payment, setPayment] = useState('Card');
+  const [donationLoading, setDonationLoading] = useState(false);
+  const navigate = useNavigate();
+  const user = useAppStore((s) => s.user);
+
+  const presets = [25, 50, 100, 250];
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -24,6 +38,41 @@ const FeaturedCampaigns = () => {
 
     fetchCampaigns();
   }, []);
+
+  const handleDonate = (campaign) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    setSelected(campaign);
+    setOpen(true);
+  };
+
+  const handleConfirmDonation = async () => {
+    if (!user || !selected) return;
+    
+    setDonationLoading(true);
+    try {
+      const res = await apiRequest('POST', 'donations/donation', {
+        amount,
+        donationType: type,
+        category,
+        paymentMethod: payment,
+        campaignId: selected._id,
+        campaignTitle: selected.title,
+        donorName: user.name,
+        donorEmail: user.email,
+      });
+
+      setOpen(false);
+      navigate(`/receipt/${res.data.donation._id}`);
+    } catch (err) {
+      console.error('Donation failed:', err);
+      alert('Donation failed. Please try again.');
+    } finally {
+      setDonationLoading(false);
+    }
+  };
 
   return (
     <section id="campaigns" className="py-14 sm:py-20">
@@ -122,12 +171,12 @@ const FeaturedCampaigns = () => {
                     </div>
 
                     <div className="mt-auto pt-4">
-                      <Link
-                        to="/campaigns"
-                        className="inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-sky-600 hover:shadow-emerald-500/40 transition-all duration-200"
+                      <Button
+                        className="w-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-sky-600 hover:shadow-emerald-500/40 transition-all duration-200"
+                        onClick={() => handleDonate(c)}
                       >
                         Donate Now
-                      </Link>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -137,6 +186,109 @@ const FeaturedCampaigns = () => {
         </div>
         )}
       </div>
+      
+      {/* Donation Modal */}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Confirm your donation"
+        description="Focused flow: amount • type • category • payment"
+      >
+        <div className="grid gap-5">
+          <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+            <div className="text-xs font-semibold text-slate-300">Campaign</div>
+            <div className="mt-1 text-sm font-semibold text-slate-100">{selected?.title || 'No campaign selected'}</div>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-slate-300">Amount</div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {presets.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setAmount(p)}
+                  className={`h-10 rounded-2xl px-4 text-sm font-semibold ring-1 transition ${
+                    amount === p
+                      ? 'bg-gradient-to-r from-emerald-500 to-sky-500 text-slate-950 ring-transparent'
+                      : 'bg-white/5 text-slate-100 ring-white/10 hover:bg-white/10'
+                  }`}
+                >
+                  ${p}
+                </button>
+              ))}
+              <div className="flex items-center gap-2 rounded-2xl px-4 ring-1 ring-white/10 bg-white/5">
+                <span className="text-sm font-semibold text-slate-300">$</span>
+                <input
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value) || 0)}
+                  className="h-10 w-24 bg-transparent text-sm font-semibold text-slate-100 outline-none"
+                  inputMode="numeric"
+                  min="1"
+                  max="100000"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <div className="text-sm font-semibold text-slate-100">Donation type</div>
+              <select
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="w-full rounded-xl bg-white/5 px-3 py-2 text-slate-100 ring-1 ring-white/10 outline-none transition focus:ring-2 focus:ring-emerald-400"
+              >
+                {['Zakat', 'Sadqah', 'Fitra', 'General'].map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-slate-100">Category</div>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="mt-2 h-11 w-full rounded-2xl bg-white/5 px-4 text-sm font-semibold text-slate-100 ring-1 ring-white/10 outline-none focus:ring-2 focus:ring-emerald-400/70"
+              >
+                {['General Relief', 'Food', 'Education', 'Medical'].map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-slate-100">Payment</div>
+              <select
+                value={payment}
+                onChange={(e) => setPayment(e.target.value)}
+                className="mt-2 h-11 w-full rounded-2xl bg-white/5 px-4 text-sm font-semibold text-slate-100 ring-1 ring-white/10 outline-none focus:ring-2 focus:ring-emerald-400/70"
+              >
+                {['Card', 'Bank Transfer', 'Wallet'].map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+            <div className="text-sm text-slate-300">
+              You're donating <span className="font-semibold text-slate-100">${amount}</span> as{' '}
+              <span className="font-semibold text-slate-100">{type}</span>.
+            </div>
+            <Button
+              onClick={handleConfirmDonation}
+              disabled={donationLoading || amount < 1}
+            >
+              {donationLoading ? 'Processing...' : 'Confirm Donation'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </section>
   );
 };
