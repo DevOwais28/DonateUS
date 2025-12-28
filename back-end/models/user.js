@@ -23,6 +23,25 @@ const userSchema = new mongoose.Schema(
     },
     googleId: String,
     picture: String,
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: String,
+    emailVerificationExpires: Date,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+    phone: {
+      type: String,
+      required: false,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

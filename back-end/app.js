@@ -8,6 +8,7 @@ const envPath = join(__dirname, '.env');
 console.log('Loading .env from:', envPath);
 dotenv.config({ path: envPath });
 console.log('After load - GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+console.log('After load - JWT_SECRET:', process.env.JWT_SECRET);
 
 import express from "express";
 import helmet from "helmet";

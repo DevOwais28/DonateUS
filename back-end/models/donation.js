@@ -20,7 +20,7 @@ const donationSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["Card", "Bank", "JazzCash", "EasyPaisa"],
+      enum: ["Card", "Bank", "Bank Transfer", "JazzCash", "EasyPaisa", "Wallet"],
       default: "Card",
     },
     donationType: {

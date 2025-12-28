@@ -76,28 +76,28 @@ export const getAllCampaigns = async (req, res) => {
     console.log('Fetching all campaigns...');
     console.log('Database connected:', mongoose.connection.readyState === 1 ? 'Yes' : 'No');
     
-    // If no campaigns exist, create a sample one for testing
-    const existingCampaigns = await Campaign.find({});
-    if (existingCampaigns.length === 0) {
-      console.log('No campaigns found, creating sample campaign...');
-      const sampleCampaign = new Campaign({
-        title: 'Help Build Clean Water Wells',
-        description: 'Provide clean drinking water to communities in need by building sustainable water wells.',
-        targetAmount: 10000,
-        collectedAmount: 2500,
-        category: 'General Relief',
-        status: 'active',
-        imageUrl: 'https://images.unsplash.com/photo-1548413956-516d3cb52821?auto=format&fit=crop&w=1400&q=70'
+    const campaigns = await Campaign.find().populate("createdBy").sort({ createdAt: -1 });
+    
+    // Recalculate collected amounts from donations (include both Pending and Verified)
+    for (const campaign of campaigns) {
+      const Donation = await import("../models/donation.js").then(m => m.default);
+      const donations = await Donation.find({ 
+        campaignId: campaign._id.toString(), 
+        status: { $in: ['Pending', 'Verified'] }
       });
-      await sampleCampaign.save();
-      console.log('Sample campaign created');
+      const totalCollected = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
+      
+      console.log(`Campaign "${campaign.title}": current collected=${campaign.collectedAmount}, calculated=${totalCollected}`);
+      
+      // Force update to ensure consistency
+      await Campaign.findByIdAndUpdate(campaign._id, { collectedAmount: totalCollected });
+      console.log(`Updated campaign "${campaign.title}" to collectedAmount: ${totalCollected}`);
     }
     
-    const campaigns = await Campaign.find().populate("createdBy").sort({ createdAt: -1 });
-    console.log('Found campaigns:', campaigns.length);
-    console.log('Campaigns data:', JSON.stringify(campaigns, null, 2));
+    const updatedCampaigns = await Campaign.find().populate("createdBy").sort({ createdAt: -1 });
+    console.log('Found campaigns:', updatedCampaigns.length);
     
-    res.status(200).json(campaigns);
+    res.status(200).json(updatedCampaigns);
   } catch (error) {
     console.error('Error fetching campaigns:', error);
     res.status(500).json({ message: "Server error", error: error.message });
