@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Card from '../ui/Card';
-import Button from '../ui/Button';
 import Progress from '../ui/Progress';
 import Modal from '../ui/Modal';
 import Badge from '../ui/Badge';
@@ -18,7 +17,7 @@ function formatMoney(n) {
 
 export default function Campaigns() {
   const navigate = useNavigate();
-  const user = useAppStore((s) => s.user);
+  const user = useAppStore((state) => state.user);
   const [open, setOpen] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -111,22 +110,27 @@ export default function Campaigns() {
             <Link to="/" className="text-sm font-semibold text-slate-100">DonateUS</Link>
             <span className="text-xs text-slate-300">Campaigns</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link to="/dashboard">
-              <Button variant="secondary" size="sm">Dashboard</Button>
+              <button className="px-2 py-1.5 sm:px-3 bg-white/5 text-white font-semibold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-xs sm:text-sm">
+                <span className="hidden sm:inline">Dashboard</span>
+                <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </button>
             </Link>
             {user && (
-              <div className="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 ring-1 ring-white/10">
+              <div className="flex items-center gap-2 rounded-full bg-white/5 px-2 sm:px-3 py-1.5 ring-1 ring-white/10 max-w-[100px] sm:max-w-none">
                 {user.picture ? (
                   <img
                     src={user.picture}
                     alt={user.name}
-                    className="h-7 w-7 rounded-full object-cover ring-1 ring-white/10"
+                    className="h-6 w-6 sm:h-7 sm:w-7 rounded-full object-cover ring-1 ring-white/10 flex-shrink-0"
                   />
                 ) : (
-                  <span className="h-7 w-7 rounded-full bg-gradient-to-br from-emerald-500/20 to-sky-500/10 ring-1 ring-white/10" />
+                  <span className="h-6 w-6 sm:h-7 sm:w-7 rounded-full bg-gradient-to-br from-emerald-500/20 to-sky-500/10 ring-1 ring-white/10 flex-shrink-0" />
                 )}
-                <span className="text-sm font-semibold text-slate-200">{user.name}</span>
+                <span className="text-xs sm:text-sm font-semibold text-slate-200 truncate hidden xs:block">{user.name}</span>
               </div>
             )}
           </div>
@@ -170,56 +174,56 @@ export default function Campaigns() {
             <h3 className="mt-4 text-lg font-semibold text-white">No campaigns available</h3>
             <p className="mt-2 text-sm text-slate-400">Check back later for new campaigns to support</p>
             {user?.role === 'admin' && (
-              <Link to="/admin/campaigns/new" className="mt-6">
-                <Button variant="secondary" className="gap-2">
+              <Link to="/admin/campaigns/new">
+                <button className="mt-6 px-4 py-2 bg-white/5 text-white font-semibold rounded-lg border border-white/10 hover:bg-white/10 transition-colors gap-2 inline-flex items-center">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   Create First Campaign
-                </Button>
+                </button>
               </Link>
             )}
           </div>
         ) : (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-8 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {campaigns.map((c) => {
               const collected = Number(c.collectedAmount) || 0;
               const target = Number(c.targetAmount) || 1;
               const pct = Math.min(100, (collected / target) * 100);
               const displayPct = pct < 1 ? pct.toFixed(1) : Math.round(pct);
               return (
-                <Card key={c._id} className="group overflow-hidden border border-white/10 bg-slate-900/50 backdrop-blur-sm transition-all duration-300 hover:border-emerald-500/30 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-emerald-500/10">
-                  <div className="relative h-48 overflow-hidden sm:h-40">
+                <Card key={c._id} className="group border border-white/10 bg-slate-900/50 backdrop-blur-sm transition-all duration-300 hover:border-emerald-500/30 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-emerald-500/10 flex flex-col">
+                  <div className="relative h-40 sm:h-48 overflow-hidden">
                     <img 
-                      src={c.imageUrl || 'https://images.unsplash.com/photo-1509099836664-375ba776d393?auto=format&fit=crop&w=1400&q=70'} 
+                      src={c.imageUrl || 'https://splash.com/photo-1509099836664-375ba776d393?auto=format&fit=crop&w=1400&q=70'} 
                       alt={c.title} 
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
-                    <div className="absolute top-4 left-4 rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/10">
+                    <div className="absolute top-3 left-3 sm:top-4 sm:left-4 rounded-full bg-emerald-500 px-2 sm:px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/10">
                       <svg className="mr-1 h-3 w-3 inline" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       Verified
                     </div>
                   </div>
-                  <div className="p-5 flex flex-col h-full">
+                  <div className="p-4 sm:p-5 flex flex-col flex-1">
                     <div className="flex-1 flex flex-col">
-                      <h3 className="text-lg font-bold text-white line-clamp-2 group-hover:text-emerald-300 transition-colors">{c.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-400 line-clamp-3">{c.description}</p>
+                      <h3 className="text-base sm:text-lg font-bold text-white line-clamp-2 group-hover:text-emerald-300 transition-colors">{c.title}</h3>
+                      <p className="mt-2 text-xs sm:text-sm leading-relaxed text-slate-400 line-clamp-3">{c.description}</p>
                       
-                      <div className="mt-4 space-y-3">
-                        <div className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2">
+                      <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
+                        <div className="flex items-center justify-between rounded-lg bg-white/5 px-2 sm:px-3 py-2">
                           <span className="text-xs font-medium text-slate-400">Goal</span>
-                          <span className="text-sm font-bold text-white">{formatMoney(c.targetAmount)}</span>
+                          <span className="text-xs sm:text-sm font-bold text-white">{formatMoney(c.targetAmount)}</span>
                         </div>
-                        <div className="flex items-center justify-between rounded-lg bg-emerald-500/10 px-3 py-2">
+                        <div className="flex items-center justify-between rounded-lg bg-emerald-500/10 px-2 sm:px-3 py-2">
                           <span className="text-xs font-medium text-emerald-300">Raised</span>
-                          <span className="text-sm font-bold text-emerald-300">{formatMoney(c.collectedAmount || 0)}</span>
+                          <span className="text-xs sm:text-sm font-bold text-emerald-300">{formatMoney(c.collectedAmount || 0)}</span>
                         </div>
                       </div>
 
-                      <div className="mt-4">
+                      <div className="mt-3 sm:mt-4">
                         <div className="mb-2 flex items-center justify-between">
                           <span className="text-xs font-medium text-slate-400">Progress</span>
                           <span className="text-xs font-bold text-emerald-300">{displayPct}%</span>
@@ -233,24 +237,30 @@ export default function Campaigns() {
                       </div>
                     </div>
 
-                    {user && (
-                      <div className="mt-6">
-                        <Button
-                          className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/40"
+                    <div className="mt-4 sm:mt-6 border-t border-white/10 pt-4">
+                      {user ? (
+                        <button
+                          className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/40 rounded-lg px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm"
                           onClick={() => {
                             setSelected(c);
                             setOpen(true);
                           }}
                         >
                           <span className="flex items-center justify-center gap-2">
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             Donate Now
                           </span>
-                        </Button>
-                      </div>
-                    )}
+                        </button>
+                      ) : (
+                        <div className="text-center text-xs sm:text-sm text-slate-400">
+                          <Link to="/login" className="text-emerald-400 hover:text-emerald-300">
+                            Login to donate
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </Card>
               );
@@ -369,7 +379,8 @@ export default function Campaigns() {
               You’re donating <span className="font-semibold text-slate-100">${amount}</span> as{' '}
               <span className="font-semibold text-slate-100">{type}</span>.
             </div>
-            <Button
+            <button
+              className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-lg shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={async () => {
                 if (!user) {
                   navigate('/login');
@@ -406,7 +417,7 @@ export default function Campaigns() {
               disabled={loading || !!errors.amount || !!errors.campaign}
             >
               {loading ? 'Processing...' : 'Confirm Donation'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>
