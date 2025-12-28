@@ -33,16 +33,23 @@ export default function Campaigns() {
     amount: '',
     campaign: ''
   });
+  const [notification, setNotification] = useState('');
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(''), 3000);
+  };
 
   const updateCampaignStatus = async (campaignId, newStatus) => {
     try {
-      await apiRequest('PUT', `campaigns/${campaignId}`, { status: newStatus });
+      await apiRequest('PUT', `campaigns/campaign/${campaignId}`, { status: newStatus });
       // Refresh campaigns
       const campaignsRes = await apiRequest('GET', 'campaigns');
       setCampaigns(campaignsRes.data || []);
+      showNotification(`Campaign status updated to ${newStatus} successfully!`);
     } catch (err) {
       console.error('Failed to update campaign status:', err);
-      alert('Failed to update campaign status');
+      showNotification('Failed to update campaign status', 'error');
     }
   };
 
@@ -118,6 +125,15 @@ export default function Campaigns() {
 
   return (
     <ThemeLayout>
+      {notification && (
+        <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg ${
+          notification.type === 'error' 
+            ? 'bg-red-500 text-white' 
+            : 'bg-emerald-500 text-white'
+        }`}>
+          {notification.message}
+        </div>
+      )}
       <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -237,17 +253,22 @@ export default function Campaigns() {
                         </div>
                       ) : user ? (
                         <button
-                          className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/40 rounded-lg px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm"
+                          className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/40 rounded-lg px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                           onClick={() => {
+                            if (c.status !== 'Active' && c.status !== 'Completed') {
+                              showNotification(`Cannot donate to ${c.status.toLowerCase()} campaign`, 'error');
+                              return;
+                            }
                             setSelected(c);
                             setOpen(true);
                           }}
+                          disabled={c.status !== 'Active' && c.status !== 'Completed'}
                         >
                           <span className="flex items-center justify-center gap-2">
                             <svg className="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Donate Now
+                            {c.status === 'Active' || c.status === 'Completed' ? 'Donate Now' : `${c.status} - No Donations`}
                           </span>
                         </button>
                       ) : (
