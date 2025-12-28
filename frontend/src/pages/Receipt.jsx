@@ -43,185 +43,202 @@ export default function Receipt() {
     if (donation && !loading && !error) {
       // Small delay to ensure content is rendered
       const timer = setTimeout(() => {
-        // Create a clean print window
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
-        const htmlContent = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>Donation Receipt #${donation._id}</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                color: #000;
-                background: #fff;
-                padding: 40px;
-                line-height: 1.6;
-                margin: 0;
-              }
-              h1, h2, h3, p, span, div, strong {
-                color: #000 !important;
-              }
-              .container {
-                max-width: 600px;
-                margin: 0 auto;
-              }
-              .header {
-                border-bottom: 2px solid #333;
-                padding-bottom: 20px;
-                margin-bottom: 30px;
-              }
-              .header h1 {
-                font-size: 28px;
-                margin-bottom: 5px;
-              }
-              .header p {
-                font-size: 14px;
-                color: #000;
-              }
-              .receipt-info {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 30px;
-              }
-              .receipt-info div {
-                text-align: right;
-              }
-              .receipt-info p {
-                margin: 5px 0;
-                font-size: 14px;
-              }
-              .section {
-                margin-bottom: 30px;
-              }
-              .section h2 {
-                font-size: 18px;
-                margin-bottom: 15px;
-                border-bottom: 1px solid #ccc;
-                padding-bottom: 5px;
-              }
-              .section h3 {
-                font-size: 16px;
-                margin-bottom: 10px;
-              }
-              .section p {
-                margin: 8px 0;
-                font-size: 14px;
-              }
-              .grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-              }
-              .donor-info {
-                background: #f8f8f8;
-                padding: 20px;
-                border-radius: 5px;
-                border: 1px solid #ddd;
-              }
-              .donor-info p {
-                margin: 5px 0;
-              }
-              .status {
-                display: inline-block;
-                padding: 5px 15px;
-                border-radius: 20px;
-                font-weight: bold;
-                font-size: 12px;
-                text-transform: uppercase;
-                background-color: ${isVerified ? '#d4edda' : '#fff3cd'};
-                color: ${isVerified ? '#155724' : '#856404'};
-              }
-              .footer {
-                margin-top: 40px;
-                padding-top: 20px;
-                border-top: 1px solid #ccc;
-                text-align: center;
-                font-size: 14px;
-                color: #000;
-              }
-              .amount {
-                font-size: 24px;
-                font-weight: bold;
-              }
-              @media print {
+        try {
+          // Create a clean print window
+          const printWindow = window.open('', '_blank', 'width=800,height=600');
+          
+          // Check if window was successfully opened
+          if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') {
+            console.log('Print window was blocked by browser');
+            return;
+          }
+          
+          const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>Donation Receipt #${donation._id}</title>
+              <style>
                 body {
+                  font-family: Arial, sans-serif;
+                  color: #000;
+                  background: #fff;
+                  padding: 40px;
+                  line-height: 1.6;
+                  margin: 0;
+                }
+                h1, h2, h3, p, span, div, strong {
+                  color: #000 !important;
+                }
+                .container {
+                  max-width: 600px;
+                  margin: 0 auto;
+                }
+                .header {
+                  border-bottom: 2px solid #333;
+                  padding-bottom: 20px;
+                  margin-bottom: 30px;
+                }
+                .header h1 {
+                  font-size: 28px;
+                  margin-bottom: 5px;
+                }
+                .header p {
+                  font-size: 14px;
+                  color: #000;
+                }
+                .receipt-info {
+                  display: flex;
+                  justify-content: space-between;
+                  margin-bottom: 30px;
+                }
+                .receipt-info div {
+                  text-align: right;
+                }
+                .receipt-info p {
+                  margin: 5px 0;
+                  font-size: 14px;
+                }
+                .section {
+                  margin-bottom: 30px;
+                }
+                .section h2 {
+                  font-size: 18px;
+                  margin-bottom: 15px;
+                  border-bottom: 1px solid #ccc;
+                  padding-bottom: 5px;
+                }
+                .section h3 {
+                  font-size: 16px;
+                  margin-bottom: 10px;
+                }
+                .section p {
+                  margin: 8px 0;
+                  font-size: 14px;
+                }
+                .grid {
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 30px;
+                }
+                .donor-info {
+                  background: #f8f8f8;
                   padding: 20px;
-                  color: #000 !important;
-                  background: #fff !important;
+                  border-radius: 5px;
+                  border: 1px solid #ddd;
                 }
-                * {
-                  color: #000 !important;
-                  background: #fff !important;
+                .donor-info p {
+                  margin: 5px 0;
                 }
-                @page {
-                  margin: 0.5in;
+                .status {
+                  display: inline-block;
+                  padding: 5px 15px;
+                  border-radius: 20px;
+                  font-weight: bold;
+                  font-size: 12px;
+                  text-transform: uppercase;
+                  background-color: ${isVerified ? '#d4edda' : '#fff3cd'};
+                  color: ${isVerified ? '#155724' : '#856404'};
                 }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <div class="header">
-                <h1>Donation Receipt</h1>
-                <p>Thank you for your generous contribution</p>
-              </div>
-
-              <div class="receipt-info">
-                <div>
-                  <p><strong>Receipt Number:</strong> ${donation._id}</p>
-                  <p><strong>Date:</strong> ${new Date(donation.createdAt).toLocaleDateString()}</p>
-                  <p><strong>Status:</strong> <span class="status">${isVerified ? 'Verified' : 'Pending'}</span></p>
+                .footer {
+                  margin-top: 40px;
+                  padding-top: 20px;
+                  border-top: 1px solid #ccc;
+                  text-align: center;
+                  font-size: 14px;
+                  color: #000;
+                }
+                .amount {
+                  font-size: 24px;
+                  font-weight: bold;
+                }
+                @media print {
+                  body {
+                    padding: 20px;
+                    color: #000 !important;
+                    background: #fff !important;
+                  }
+                  * {
+                    color: #000 !important;
+                    background: #fff !important;
+                  }
+                  @page {
+                    margin: 0.5in;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>Donation Receipt</h1>
+                  <p>Thank you for your generous contribution</p>
                 </div>
-              </div>
 
-              <div class="section">
-                <h2>Donation Details</h2>
-                <div class="grid">
+                <div class="receipt-info">
                   <div>
-                    <h3>Campaign Information</h3>
-                    <p><strong>Campaign:</strong> ${donation.campaignTitle}</p>
-                    <p><strong>Donation Type:</strong> ${donation.donationType}</p>
-                    <p><strong>Category:</strong> ${donation.category}</p>
-                  </div>
-                  <div>
-                    <h3>Payment Information</h3>
-                    <p><strong>Amount:</strong> <span class="amount">$${donation.amount.toFixed(2)}</span></p>
-                    <p><strong>Payment Method:</strong> ${donation.paymentMethod}</p>
-                    <p><strong>Transaction Date:</strong> ${new Date(donation.createdAt).toLocaleString()}</p>
+                    <p><strong>Receipt Number:</strong> ${donation._id}</p>
+                    <p><strong>Date:</strong> ${new Date(donation.createdAt).toLocaleDateString()}</p>
+                    <p><strong>Status:</strong> <span class="status">${isVerified ? 'Verified' : 'Pending'}</span></p>
                   </div>
                 </div>
-              </div>
 
-              <div class="section">
-                <h3>Donor Information</h3>
-                <div class="donor-info">
-                  <p><strong>${donation.donorName}</strong></p>
-                  <p>${donation.donorEmail}</p>
+                <div class="section">
+                  <h2>Donation Details</h2>
+                  <div class="grid">
+                    <div>
+                      <h3>Campaign Information</h3>
+                      <p><strong>Campaign:</strong> ${donation.campaignTitle}</p>
+                      <p><strong>Donation Type:</strong> ${donation.donationType}</p>
+                      <p><strong>Category:</strong> ${donation.category}</p>
+                    </div>
+                    <div>
+                      <h3>Payment Information</h3>
+                      <p><strong>Amount:</strong> <span class="amount">$${donation.amount.toFixed(2)}</span></p>
+                      <p><strong>Payment Method:</strong> ${donation.paymentMethod}</p>
+                      <p><strong>Transaction Date:</strong> ${new Date(donation.createdAt).toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <h3>Donor Information</h3>
+                  <div class="donor-info">
+                    <p><strong>${donation.donorName}</strong></p>
+                    <p>${donation.donorEmail}</p>
+                  </div>
+                </div>
+
+                <div class="footer">
+                  <p>Thank you for your generous support!</p>
+                  <p>This receipt confirms your donation to our organization.</p>
                 </div>
               </div>
-
-              <div class="footer">
-                <p>Thank you for your generous support!</p>
-                <p>This receipt confirms your donation to our organization.</p>
-              </div>
-            </div>
-          </body>
-          </html>
-        `;
-        
-        printWindow.document.write(htmlContent);
-        printWindow.document.close();
-        
-        // Wait for content to fully load, then trigger print
-        setTimeout(() => {
-          printWindow.focus();
-          printWindow.print();
-        }, 1000);
+            </body>
+            </html>
+          `;
+          
+          printWindow.document.write(htmlContent);
+          printWindow.document.close();
+          
+          // Wait for content to fully load, then trigger print
+          setTimeout(() => {
+            if (printWindow && !printWindow.closed) {
+              printWindow.focus();
+              printWindow.print();
+              // Close the print window after printing
+              setTimeout(() => {
+                printWindow.close();
+              }, 1000);
+            }
+          }, 1000);
+        } catch (error) {
+          console.error('Error opening print window:', error);
+        }
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [donation, loading, error]);
+  }, [donation, loading, error, isVerified]);
 
   // Print styles with proper text colors
   const printStyles = `
