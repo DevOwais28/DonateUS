@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../ui/Button';
 import { useAppStore } from '../lib/store.js';
+import ProfileAvatar from '../components/ProfileAvatar.jsx';
 
 export default function Topbar({ title, onMenu }) {
   const navigate = useNavigate();
@@ -39,17 +40,7 @@ export default function Topbar({ title, onMenu }) {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
         {user && (
           <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-1.5 ring-1 ring-white/10">
-            {profilePicture && (
-              <img
-                src={profilePicture}
-                alt={user.name}
-                className="h-6 w-6 rounded-full object-cover"
-                onError={(e) => {
-                  console.log('Profile picture failed to load, using fallback');
-                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=4285f4&color=fff&size=128`;
-                }}
-              />
-            )}
+            <ProfileAvatar user={user} size="sm" />
             <div className="text-sm">
               <div className="font-semibold text-slate-100">{user.name}</div>
               <div className="text-xs text-slate-400 capitalize">{role}</div>
