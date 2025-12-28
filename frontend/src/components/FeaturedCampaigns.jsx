@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { apiRequest } from '../api.js';
 import { useAppStore } from '../lib/store.js';
 import Modal from '../ui/Modal';
+import Button from '../ui/Button';
 
 const formatMoney = (n) => `$${n.toLocaleString()}`;
 
