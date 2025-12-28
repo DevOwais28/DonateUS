@@ -199,8 +199,19 @@ export const getDonationById = async (req, res) => {
     console.log('Request user role:', req.user?.role);
 
     // Users can only view their own donations unless they're admin
-    if (req.user?.role !== 'admin' && donation.userId?._id?.toString() !== req.user?.id) {
+    // Check by userId first, then by email if userId is not available
+    const donationUserId = donation.userId?._id?.toString() || donation.userId?.toString();
+    const canAccess = 
+      req.user?.role === 'admin' ||
+      donationUserId === req.user?.id ||
+      (!donationUserId && donation.donorEmail === req.user?.email);
+    
+    if (!canAccess) {
       console.log('Access denied - user trying to access another user\'s donation');
+      console.log('Donation userId:', donationUserId);
+      console.log('Donation email:', donation.donorEmail);
+      console.log('Request user ID:', req.user?.id);
+      console.log('Request user email:', req.user?.email);
       return res.status(403).json({ message: "Access denied" });
     }
 
