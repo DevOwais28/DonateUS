@@ -42,29 +42,104 @@ function PublicRoute({ children }) {
 function App() {
   return (
     <Routes>
-      <Route key="landing" path="/" element={<Landing />} />
-      <Route key="login" path="/login" element={<Login />} />
-      <Route key="signup" path="/signup" element={<Signup />} />
-      <Route key="forgot-password" path="/forgot-password" element={<ForgotPassword />} />
-      <Route key="reset-password" path="/reset-password/:token" element={<ResetPassword />} />
-      <Route key="verify" path="/verify/:token" element={<EmailVerification />} />
-      <Route key="auth-callback" path="/auth/callback" element={<AuthCallback />} />
+      {/* Public routes (blocked when logged in) */}
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Landing />
+          </PublicRoute>
+        }
+      />
 
-      <Route key="campaigns" path="/campaigns" element={<Campaigns />} />
-      <Route key="receipt-detail" path="/receipt/:id" element={<Receipt />} />
-      <Route key="receipt-redirect" path="/receipt" element={<Navigate to="/dashboard" replace />} />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
 
-      <Route key="dashboard" path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route key="receipts" path="/receipts" element={<ProtectedRoute><Receipts /></ProtectedRoute>} />
-      <Route key="settings" path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+      <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <Signup />
+          </PublicRoute>
+        }
+      />
 
-      <Route key="admin-dashboard" path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
-      <Route key="admin-create-campaign" path="/admin/campaigns/new" element={<ProtectedRoute adminOnly><CreateCampaign /></ProtectedRoute>} />
-      <Route key="admin-donations" path="/admin/donations" element={<ProtectedRoute adminOnly><AdminDonations /></ProtectedRoute>} />
+      {/* Auth related */}
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/verify/:token" element={<EmailVerification />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
 
-      <Route key="catch-all" path="*" element={<Navigate to="/" replace />} />
+      {/* Public pages */}
+      <Route path="/campaigns" element={<Campaigns />} />
+      <Route path="/receipt/:id" element={<Receipt />} />
+      <Route path="/receipt" element={<Navigate to="/dashboard" replace />} />
+
+      {/* User protected */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/receipts"
+        element={
+          <ProtectedRoute>
+            <Receipts />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin protected */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/campaigns/new"
+        element={
+          <ProtectedRoute adminOnly>
+            <CreateCampaign />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/donations"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminDonations />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Catch all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
-
 export default App;
