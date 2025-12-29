@@ -262,7 +262,7 @@ export default function Campaigns() {
                             setSelected(c);
                             setOpen(true);
                           }}
-                          disabled={c.status !== 'Active' && c.status !== 'Completed'}
+                          disabled={c.status !== 'Active'}
                         >
                           <span className="flex items-center justify-center gap-2">
                             <svg className="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -442,4 +442,5 @@ export default function Campaigns() {
     </ThemeLayout>
   );
 }
+
 
