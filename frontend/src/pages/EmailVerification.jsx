@@ -25,7 +25,7 @@ export default function EmailVerification() {
 
   const handleVerifyEmail = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/users/verify/${token}`, {
+      const response = await fetch(`https://donateus-production.up.railway.app/api/users/verify/${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -185,3 +185,4 @@ export default function EmailVerification() {
     </ThemeLayout>
   );
 }
+
