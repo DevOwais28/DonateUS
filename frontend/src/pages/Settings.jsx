@@ -210,18 +210,12 @@ export default function Settings() {
       const formData = new FormData();
       formData.append('image', file);
 
-      const res = await fetch('http://localhost:4000/api/users/profile-picture', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${useAppStore.getState().token}`
-        }
-      });
+      const res = await apiRequest('POST', 'users/profile-picture', formData);
 
-      const data = await res.json();
+      const data = res.data;
       
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to upload profile picture');
+      if (!res.data.success) {
+        throw new Error(res.data.message || 'Failed to upload profile picture');
       }
 
       setUser(data.user, useAppStore.getState().token, data.user.role);
@@ -431,7 +425,7 @@ export default function Settings() {
                 </div>
               )}
               
-              <Button type="submit"  disabled={loading || isGoogleAuth || !!errors.name || !!errors.email || !!errors.phone}>
+              <Button type="submit" disabled={loading || isGoogleAuth || !!errors.name || !!errors.email || !!errors.phone}>
                 {loading ? 'Updating...' : 'Update Profile'}
               </Button>
             </form>
@@ -598,5 +592,3 @@ export default function Settings() {
     </AppShell>
   );
 }
-
-
