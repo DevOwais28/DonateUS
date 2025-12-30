@@ -186,7 +186,7 @@ const signinUser = async (req, res) => {
 
 const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('name email role picture googleId createdAt provider isDeleted phone');
+    const user = await User.findById(req.user.id).select('name email role picture googleId createdAt provider isDeleted phone isVerified');
     return res.status(200).send({
       success: true,
       user: user,
@@ -628,4 +628,28 @@ const resetPassword = async (req, res) => {
   }
 };
 
-export { createUser, signinUser, getMe, updateProfile, updatePassword, updateProfilePicture, verifyEmail, resendVerification, deleteUser, forgotPassword, resetPassword };
+const getProfilePicture = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('picture');
+    
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      picture: user.picture
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: 'Error fetching profile picture',
+      error: error.message
+    });
+  }
+};
+
+export { createUser, signinUser, getMe, updateProfile, updatePassword, updateProfilePicture, getProfilePicture, verifyEmail, resendVerification, deleteUser, forgotPassword, resetPassword };
