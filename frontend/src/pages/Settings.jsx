@@ -431,7 +431,14 @@ export default function Settings() {
                 </div>
               )}
               
-              <Button type="submit" disabled={loading || isGoogleAuth || !!errors.name || !!errors.email || !!errors.phone}>
+              <Button type="submit"  disabled={
+  loading ||
+  !!errors.phone ||
+  (
+    !isGoogleAuth &&
+    ( !!errors.name || !!errors.email )
+  )
+              }>
                 {loading ? 'Updating...' : 'Update Profile'}
               </Button>
             </form>
@@ -598,3 +605,4 @@ export default function Settings() {
     </AppShell>
   );
 }
+
