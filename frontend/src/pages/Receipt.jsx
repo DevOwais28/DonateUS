@@ -44,7 +44,16 @@ export default function Receipt() {
       // Small delay to ensure content is rendered
       const timer = setTimeout(() => {
         try {
-          // Create a clean print window
+          // Check if mobile device
+          const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+          
+          if (isMobile) {
+            // On mobile, show a prompt instead of auto-printing
+            console.log('Mobile device detected - auto-print disabled for better UX');
+            return;
+          }
+          
+          // Create a clean print window for desktop only
           const printWindow = window.open('', '_blank', 'width=800,height=600');
           
           // Check if window was successfully opened
@@ -316,6 +325,13 @@ export default function Receipt() {
     <ThemeLayout className="px-4 py-10">
       <style>{printStyles}</style>
       <div className="mx-auto max-w-2xl">
+        {/* Mobile print notification */}
+        <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-3 sm:hidden">
+          <p className="text-sm text-blue-800 text-center">
+            📱 Tap the "Print Receipt" button below to print or save your receipt
+          </p>
+        </div>
+        
         <div id="receipt-print" className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-lg">
           {/* Header */}
           <div className="mb-4 sm:mb-6 border-b pb-3 sm:pb-4">
