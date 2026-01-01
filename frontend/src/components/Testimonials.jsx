@@ -54,21 +54,10 @@ const Testimonials = () => {
             </figure>
           ))}
         </div>
-
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.55)] backdrop-blur-none md:backdrop-blur sm:p-8">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-slate-100">Next: full app screens</h3>
-              <p className="mt-1 text-sm text-slate-300">Signup, Login, Campaign grid, Donation modal, Receipt, Dashboards.</p>
-            </div>
-            <a href="#campaigns" className="rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:opacity-95 transition">
-              Continue to campaigns
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );
 };
 
 export default Testimonials;
+
