@@ -103,9 +103,6 @@ export default function AdminDonations() {
                     <option value="verified">Verified</option>
                   </select>
                 </div>
-                <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all whitespace-nowrap">
-                  Apply Filter
-                </button>
               </div>
             </div>
 
@@ -130,8 +127,8 @@ export default function AdminDonations() {
             ) : (
               <div className="space-y-4">
                 {/* Desktop Table */}
-                <div className="hidden lg:block overflow-x-auto rounded-xl border border-white/10 bg-white/5">
-                  <table className="w-full">
+                <div className="hidden lg:block rounded-xl border border-white/10 bg-white/5">
+                  <table className="w-full table-fixed">
                     <thead>
                       <tr className="border-b border-white/10 bg-white/5">
                         <th className="py-3 pl-6 pr-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">Donor Information</th>
@@ -163,14 +160,14 @@ export default function AdminDonations() {
                             </div>
                           </td>
                           <td className="py-3 px-4">
-                            <div className="text-sm font-bold text-white">${r.amount}</div>
-                            <div className="text-xs text-slate-400">{r.paymentMethod}</div>
+                            <div className="text-sm font-bold text-white truncate">${r.amount}</div>
+                            <div className="text-xs text-slate-400 truncate">{r.paymentMethod}</div>
                           </td>
                           <td className="py-3 px-4">
                             <div className="text-sm text-slate-300 truncate">{r.campaignTitle || 'General'}</div>
                           </td>
                           <td className="py-3 px-4">
-                            <div className="text-sm text-slate-300">{new Date(r.createdAt).toLocaleDateString()}</div>
+                            <div className="text-sm text-slate-300 truncate">{new Date(r.createdAt).toLocaleDateString()}</div>
                           </td>
                           <td className="py-3 px-4">
                             <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
