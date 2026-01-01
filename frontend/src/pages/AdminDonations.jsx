@@ -9,6 +9,8 @@ export default function AdminDonations() {
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
   const [filteredRows, setFilteredRows] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchDonations = async () => {
@@ -35,7 +37,14 @@ export default function AdminDonations() {
       // Case-insensitive comparison to handle "Pending" vs "pending"
       setFilteredRows(rows.filter(r => r.status?.toLowerCase() === filterStatus.toLowerCase()));
     }
+    setCurrentPage(1); // Reset to first page when filter changes
   }, [filterStatus, rows]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedRows = filteredRows.slice(startIndex, endIndex);
 
   const updateStatus = async (id, newStatus) => {
     if (!id) {
@@ -103,6 +112,9 @@ export default function AdminDonations() {
                     <option value="verified">Verified</option>
                   </select>
                 </div>
+                <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all whitespace-nowrap">
+                  Apply Filter
+                </button>
               </div>
             </div>
 
@@ -114,7 +126,7 @@ export default function AdminDonations() {
                 <p className="mt-4 text-sm font-medium text-slate-300">Loading donations...</p>
                 <p className="mt-1 text-xs text-slate-400">Fetching donation records</p>
               </div>
-            ) : filteredRows.length === 0 ? (
+            ) : paginatedRows.length === 0 ? (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/5 py-16">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/10">
                   <svg className="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,7 +152,7 @@ export default function AdminDonations() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                      {filteredRows.map((r) => (
+                      {paginatedRows.map((r) => (
                         <tr key={r._id} className="hover:bg-white/5 transition-colors">
                           <td className="py-3 pl-6 pr-4">
                             <div className="flex items-center gap-3">
@@ -203,7 +215,7 @@ export default function AdminDonations() {
 
                 {/* Mobile Cards */}
                 <div className="space-y-4 lg:hidden">
-                  {filteredRows.map((r) => (
+                  {paginatedRows.map((r) => (
                     <div key={r._id} className="rounded-xl border border-white/10 bg-slate-900/50 backdrop-blur-sm p-4">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -258,6 +270,50 @@ export default function AdminDonations() {
                     </div>
                   ))}
                 </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
+                    <div className="text-sm text-slate-400">
+                      Showing {startIndex + 1} to {Math.min(endIndex, filteredRows.length)} of {filteredRows.length} donations
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 rounded-lg bg-white/5 text-sm font-medium text-slate-300 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Previous
+                      </button>
+                      
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                          <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                              currentPage === page
+                                ? 'bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/20'
+                                : 'bg-white/5 text-slate-300 hover:bg-white/10'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
+                      
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 rounded-lg bg-white/5 text-sm font-medium text-slate-300 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Next
+                      </button>
+                    </div>
+                    
+                  
+                  </div>
+                )}
               </div>
             )}
           </div>
