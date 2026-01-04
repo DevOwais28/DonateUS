@@ -232,7 +232,7 @@ export default function Signup() {
                   </svg>
                 </span>
                 <div>
-                  <div className="text-base font-semibold tracking-tight text-slate-100">DonationZakat System</div>
+                  <div className="text-base font-semibold tracking-tight text-slate-100">DonateUS</div>
                   <div className="text-xs text-slate-300">Create your donor account</div>
                 </div>
               </Link>
@@ -463,3 +463,4 @@ export default function Signup() {
     </ThemeLayout>
   );
 }
+
