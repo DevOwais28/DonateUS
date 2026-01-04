@@ -104,7 +104,7 @@ export default function Login() {
                   </svg>
                 </span>
                 <div>
-                  <div className="text-base font-semibold tracking-tight text-slate-100">DonationZakat System</div>
+                  <div className="text-base font-semibold tracking-tight text-slate-100">DonateUS</div>
                   <div className="text-xs text-slate-300">Secure donor access</div>
                 </div>
               </Link>
@@ -307,4 +307,5 @@ export default function Login() {
     </ThemeLayout>
   );
 }
+
 
