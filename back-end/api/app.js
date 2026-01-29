@@ -18,7 +18,7 @@ import { v2 as cloudinary } from "cloudinary";
 export const envMode = process.env.NODE_ENV || "DEVELOPMENT";
 
 // DB (IMPORTANT: connect once)
-connectDB(process.env.MONGO_URI);
+await connectDB(process.env.MONGO_URI);
 
 // Cloudinary
 cloudinary.config({
