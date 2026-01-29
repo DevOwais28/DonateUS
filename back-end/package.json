@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "A Donation Management System using Node.js, Express, MongoDB",
   "type": "module",
-  "main": "api/app.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node api/app.js",
-    "dev": "nodemon api/app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [
     "donation",
@@ -28,9 +28,6 @@
     "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0"
-  },
-  "engines": {
-    "node": "24.x"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
