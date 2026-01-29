@@ -14,10 +14,10 @@ import googleAuthRoutes from "./routes/googleAuth.js";
 import authenticate from "./middlewares/authentication.js";
 import { v2 as cloudinary } from "cloudinary";
 
+// ENV
 export const envMode = process.env.NODE_ENV || "DEVELOPMENT";
-const port = process.env.PORT || 3000;
 
-// DB
+// DB (IMPORTANT: connect once)
 connectDB(process.env.MONGO_URI);
 
 // Cloudinary
@@ -48,12 +48,12 @@ app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Passport
+// Passport (ESM-safe dynamic import)
 const { default: passport } = await import("./config/passport.js");
 app.use(passport.initialize());
 
 // Routes
-app.get("/", (req, res) => res.send("Hello World"));
+app.get("/", (req, res) => res.send("Hello World 🚀"));
 
 app.use("/api/donations", donationRoutes);
 app.use("/api/campaigns", campaignRoutes);
@@ -62,9 +62,8 @@ app.use("/api/receipts", authenticate, receiptRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", googleAuthRoutes);
 
-// Errors
+// Error handler
 app.use(errorMiddleware);
 
-app.listen(port, () =>
-  console.log(`Server running on port ${port} in ${envMode}`)
-);
+// ✅ REQUIRED FOR VERCEL
+export default app;
