@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A Donation Management System using Node.js, Express, MongoDB",
   "type": "module",
-  "main": "server.js",
+  "main": "api/app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
