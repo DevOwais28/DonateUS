@@ -4,20 +4,23 @@ dotenv.config();
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
+import passport from "./config/passport.js";
+
 import { errorMiddleware } from "./middlewares/error.js";
 import { connectDB } from "./lib/db.js";
+
 import donationRoutes from "./routes/donation.js";
 import campaignRoutes from "./routes/campaign.js";
 import receiptRoutes from "./routes/receipt.js";
 import userRoutes from "./routes/user.js";
 import googleAuthRoutes from "./routes/googleAuth.js";
 import authenticate from "./middlewares/authentication.js";
+
 import { v2 as cloudinary } from "cloudinary";
 
-// ENV
-export const envMode = process.env.NODE_ENV || "DEVELOPMENT";
+const app = express();
 
-// DB (IMPORTANT: connect once)
+// DB
 await connectDB(process.env.MONGO_URI);
 
 // Cloudinary
@@ -27,33 +30,28 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const app = express();
-
-// Security
+// Security (SAFE)
 app.use(
   helmet({
-    contentSecurityPolicy: envMode !== "DEVELOPMENT",
-    crossOriginEmbedderPolicy: envMode !== "DEVELOPMENT",
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
   })
 );
 
 // CORS
-const allowedOrigins =
-  envMode === "DEVELOPMENT"
-    ? ["http://localhost:5173", "http://localhost:3000"]
-    : ["https://donate-us.vercel.app"];
-
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://donate-us.vercel.app"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Passport (ESM-safe dynamic import)
-const { default: passport } = await import("./config/passport.js");
 app.use(passport.initialize());
 
 // Routes
-app.get("/", (req, res) => res.send("Hello World 🚀"));
+app.get("/", (req, res) => res.send("API running on Vercel 🚀"));
 
 app.use("/api/donations", donationRoutes);
 app.use("/api/campaigns", campaignRoutes);
@@ -62,8 +60,8 @@ app.use("/api/receipts", authenticate, receiptRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", googleAuthRoutes);
 
-// Error handler
+// Errors
 app.use(errorMiddleware);
 
-// ✅ REQUIRED FOR VERCEL
+// ✅ EXPORT ONLY
 export default app;
