@@ -29,6 +29,9 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0"
   },
+  "engines": {
+    "node": "18.x"
+  },
   "devDependencies": {
     "nodemon": "^3.0.1"
   }
